@@ -5,4 +5,40 @@ Decorator tasarım desenini Decorator sınıfları ve Component sınıfları şe
 
 ![Image of Class](https://github.com/safakerer/yazilimMimarisiOdev/blob/master/Decarotor%C5%9Eablon.png)
 
-Decorator sınıfı Component sınıfından türemiştir. Decorator sınıfı içerisinde Component türünden instance değişken bulunur.Decorator sınıfı abstract veya interface olabilir. Somut sınıf kullanmamak gereklidir.Dinamik olarak özelliklerin ekleneceği nesne, ConcreteComponent sınıfından türetilir.ConcreteDecorator nesnesi, ConcreteComponent nesnesine özelliklerin eklenmesi işlemini yapar.
+Decorator sınıfı Component sınıfından türemiştir. Decorator sınıfı içerisinde Component türünden instance değişken bulunur.Decorator sınıfı abstract veya interface olabilir. Somut sınıf kullanmamak gereklidir.Dinamik olarak özelliklerin ekleneceği nesne, ConcreteComponent sınıfından türetilir.ConcreteDecorator nesnesi, ConcreteComponent nesnesine özelliklerin eklenmesi işlemini yapar.Decorator tasarım desenini kullanarak basit bir uygulama yapacağız.
+
+ Component interface. Tum decorator siniflari bu interface'i implement etmek zorundadir
+```java
+public interface Calculator {
+    public double calculate();
+}
+```
+
+Decorator işleminin yapılacağı sınıf oluşturulur.
+```java
+public class ConcreteCalculator implements Calculator {
+    private double value=0;
+    public ConcreteCalculator(double value){
+        this.value=value;
+    }
+    @Override
+    public double calculate() {
+        return value;
+    }
+```
+
+Decorator sınıfının oluşturuyoruz. Decarotor sınıfını oluştururken abstract tanımlamak zorundayız.
+```java
+public abstract class CalculateDecorator implements Calculator {
+    protected Calculator calculator; //eklemek zorunlu
+  
+    protected CalculateDecorator(Calculator calculator) {
+        this.calculator = calculator;
+    }
+  
+    @Override
+    public double calculate() {
+        return calculator.calculate(); //Calculator interfacedeki calculate metodunu cagirmasi zorunlu
+    }
+}
+```
