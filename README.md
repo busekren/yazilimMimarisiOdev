@@ -46,4 +46,81 @@ public abstract class CalculateDecorator implements Calculator {
 ```
 
 ## Chain of Responsibility Tasarım Deseni
+Bu tasarım deseni Davranışsal Tasarım Desenlerine (behavioral design patterns) aittir. Bu desen değişen şeylere karşı geliştirilebilir (esnek) bir altyapı sağlayan tasarım desenleri bu kategori altında yer alıyor. Chain of responsibility tasarım deseni; bir isteğin duruma göre farklı şekillerde işlem yapılması gereken durumlarda kullanılır. Bu tasarım deseninde isteğe cevap verebilecek sınıflar aynı arayüzü kullanır ve isteğin durumuna göre ya cevap verir ya da isteği zincirdeki sonraki nesneye gönderir. 
 
+![Image of Class](https://github.com/safakerer/yazilimMimarisiOdev/blob/master/chain_pattern_uml_diagram.jpg)
+
+
+Soyut bir logger sınıfı oluşturalım.
+```java
+public abstract class AbstractLogger {
+   public static int INFO = 1;
+   public static int DEBUG = 2;
+   public static int ERROR = 3;
+
+   protected int level;
+
+   //next element in chain or responsibility
+   protected AbstractLogger nextLogger;
+
+   public void setNextLogger(AbstractLogger nextLogger){
+      this.nextLogger = nextLogger;
+   }
+
+   public void logMessage(int level, String message){
+      if(this.level <= level){
+         write(message);
+      }
+      if(nextLogger !=null){
+         nextLogger.logMessage(level, message);
+      }
+   }
+
+   abstract protected void write(String message);
+	
+}
+```
+Soyut Logger sınıfımızı genişletelim. `ConsoleLogger.java`, `ErrorLogger.java` ve `FileLogger.java` sınıfımızı extend edelim.
+```java
+public class ConsoleLogger extends AbstractLogger {
+
+   public ConsoleLogger(int level){
+      this.level = level;
+   }
+
+   @Override
+   protected void write(String message) {		
+      System.out.println("Standard Console::Logger: " + message);
+   }
+}
+```
+Farklı türlerde Loggerlar oluşturalım.Onlara hata düzeyleri atayalım ve her Logger'a bir sonraki logger'ı ayarlayalım. Her Logger bir sonraki Logger zincirinin bir bölümünü temsil eder.
+```java
+public class ChainPatternDemo {
+	
+   private static AbstractLogger getChainOfLoggers(){
+
+      AbstractLogger errorLogger = new ErrorLogger(AbstractLogger.ERROR);
+      AbstractLogger fileLogger = new FileLogger(AbstractLogger.DEBUG);
+      AbstractLogger consoleLogger = new ConsoleLogger(AbstractLogger.INFO);
+
+      errorLogger.setNextLogger(fileLogger);
+      fileLogger.setNextLogger(consoleLogger);
+
+      return errorLogger;	
+   }
+
+   public static void main(String[] args) {
+      AbstractLogger loggerChain = getChainOfLoggers();
+
+      loggerChain.logMessage(AbstractLogger.INFO, 
+         "This is an information.");
+
+      loggerChain.logMessage(AbstractLogger.DEBUG, 
+         "This is an debug level information.");
+
+      loggerChain.logMessage(AbstractLogger.ERROR, 
+         "This is an error information.");
+   }
+}
+```
