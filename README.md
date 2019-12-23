@@ -7,7 +7,9 @@ Decorator tasarım desenini Decorator sınıfları ve Component sınıfları şe
 
 Decorator sınıfı Component sınıfından türemiştir. Decorator sınıfı içerisinde Component türünden instance değişken bulunur.Decorator sınıfı abstract veya interface olabilir. Somut sınıf kullanmamak gereklidir.Dinamik olarak özelliklerin ekleneceği nesne, ConcreteComponent sınıfından türetilir.ConcreteDecorator nesnesi, ConcreteComponent nesnesine özelliklerin eklenmesi işlemini yapar.Decorator tasarım desenini kullanarak basit bir uygulama yapacağız.
 
- Component interface. Tum decorator siniflari bu interface'i implement etmek zorundadir
+![Image of Class](https://github.com/safakerer/yazilimMimarisiOdev/blob/master/decoratorUML1.png)
+
+ Component interface. Tum decorator sınıfları bu interface'i implement etmek zorundadır.
 ```java
 public interface Calculator {
     public double calculate();
